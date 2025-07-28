@@ -8,7 +8,6 @@ namespace ResaleApi.Features.Validations
         public CriarRevendaCommandValidator()
         {
             RuleFor(x => x.Cnpj).NotEmpty().WithMessage("CNPJ é obrigatório.");
-            // Adicionar validação de CNPJ válido (pode usar uma biblioteca externa ou regex)
             RuleFor(x => x.RazaoSocial).NotEmpty().WithMessage("Razão Social é obrigatória.");
             RuleFor(x => x.NomeFantasia).NotEmpty().WithMessage("Nome Fantasia é obrigatório.");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email é obrigatório.").EmailAddress().WithMessage("Email inválido.");

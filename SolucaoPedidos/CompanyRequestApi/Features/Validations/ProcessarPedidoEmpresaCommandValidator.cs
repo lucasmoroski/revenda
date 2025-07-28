@@ -7,7 +7,6 @@ namespace CompanyRequestApi.Features.Validations
     {
         public ProcessarPedidoEmpresaCommandValidator()
         {
-            // Exemplo de regra de validação:
             RuleFor(x => x.IdRevenda)
                 .NotEmpty().WithMessage("O ID da Revenda é obrigatório.");
 

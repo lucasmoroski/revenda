@@ -32,7 +32,6 @@ namespace CompanyRequestApi.Infrastructure.Services
                 throw new ArgumentNullException(nameof(queueName), "O nome da fila é obrigatório para o Azure Service Bus.");
             }
 
-            // Cria um remetente para a fila específica. É leve e pode ser criado por chamada.
             await using var sender = _client.CreateSender(queueName);
 
             try
@@ -57,14 +56,12 @@ namespace CompanyRequestApi.Infrastructure.Services
                 throw new ArgumentNullException(nameof(queueName), "O nome da fila é obrigatório para o Azure Service Bus.");
             }
 
-            // O ServiceBusProcessor é a forma recomendada para consumir mensagens continuamente.
             var processor = _client.CreateProcessor(queueName, new ServiceBusProcessorOptions
             {
-                AutoCompleteMessages = false, // Processaremos o ACK/NACK manualmente.
-                MaxConcurrentCalls = 1 // Processa uma mensagem por vez. Aumente se necessário.
+                AutoCompleteMessages = false,
+                MaxConcurrentCalls = 1
             });
 
-            // 1. Define o handler para processar a mensagem
             processor.ProcessMessageAsync += async (args) =>
             {
                 var body = args.Message.Body.ToString();
@@ -75,7 +72,6 @@ namespace CompanyRequestApi.Infrastructure.Services
                     {
                         await handler(message, args.CancellationToken);
 
-                        // ✅ Confirma que a mensagem foi processada com sucesso e a remove da fila.
                         await args.CompleteMessageAsync(args.Message);
                     }
                 }
@@ -83,20 +79,16 @@ namespace CompanyRequestApi.Infrastructure.Services
                 {
                     _logger.LogError(ex, "Erro ao processar mensagem da fila {QueueName}.", queueName);
 
-                    // ☠️ Abandona a mensagem. Ela ficará disponível para ser reprocessada.
-                    // Após um número de tentativas, ela irá automaticamente para a Dead-Letter Queue.
                     await args.AbandonMessageAsync(args.Message);
                 }
             };
 
-            // 2. Define o handler para erros do próprio processador (ex: perda de conexão)
             processor.ProcessErrorAsync += (args) =>
             {
                 _logger.LogError(args.Exception, "Erro inesperado no processador da fila {QueueName}.", args.EntityPath);
                 return Task.CompletedTask;
             };
 
-            // 3. Inicia o processamento
             processor.StartProcessingAsync(cancellationToken).ContinueWith(t =>
             {
                 if (t.IsFaulted)
@@ -105,7 +97,6 @@ namespace CompanyRequestApi.Infrastructure.Services
                 }
             });
 
-            // Adiciona à lista para garantir o Dispose correto no shutdown da aplicação
             _processors.Add(processor);
         }
 

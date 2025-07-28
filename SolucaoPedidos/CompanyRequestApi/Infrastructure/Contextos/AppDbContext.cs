@@ -16,7 +16,7 @@ namespace CompanyRequestApi.Infrastructure.Contextos
                 .HasMany(p => p.Itens)
                 .WithOne(i => i.PedidoEmpresa)
                 .HasForeignKey(i => i.PedidoEmpresaId)
-                .OnDelete(DeleteBehavior.Cascade); // Excluir itens ao excluir o pedido
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

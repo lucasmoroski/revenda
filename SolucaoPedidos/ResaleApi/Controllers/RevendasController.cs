@@ -24,7 +24,6 @@ public class RevendasController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id)
     {
-        // Adicionar query para buscar revenda por ID
-        return Ok(); // Implementar
+        return Ok();
     }
 }
