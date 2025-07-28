@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CompanyRequestApi.Models
+{
+    public class PedidoEmpresa
+    {
+        [Key]
+        public Guid Id { get; set; }
+        public string IdRevenda { get; set; }
+        public string IdPedidoClienteOriginal { get; set; }
+        public int QuantidadeTotalItens { get; set; }
+        public DateTime DataEmissao { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } // Ex: "Pendente", "Enviado", "Confirmado", "Falha"
+        public string NumeroPedidoEmpresa { get; set; } // Número de pedido retornado pela API da Empresa
+        public List<ItemPedidoEmpresa> Itens { get; set; } = new List<ItemPedidoEmpresa>();
+    }
+}
