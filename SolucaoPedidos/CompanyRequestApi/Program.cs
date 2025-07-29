@@ -1,9 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Reflection;
 using System.Net;
 using CompanyRequestApi.Infrastructure.Contextos;
 using CompanyRequestApi.Infrastructure.Interfaces;
@@ -15,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
 using CompanyRequestApi.Infrastructure.Services;
 using Polly;
+using Azure.Messaging.ServiceBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +54,7 @@ builder.Services.AddHttpClient<IRevendaApiClient, RevendaApiClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["RevendaApi:BaseUrl"]);
 });
 
+// builder.Services.AddSingleton(new ServiceBusClient(builder.Configuration["AzureServiceBus:ConnectionString"]));
 builder.Services.AddSingleton<IMessagingService, ServiceBusService>();
 
 builder.Services.AddHostedService<PedidoClienteReceivedConsumer>();

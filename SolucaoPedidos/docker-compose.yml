@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  postgres_db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: company_request_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d company_request_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb_db:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "echo 'db.runCommand({ ping: 1 })' | mongo localhost:27017/test --quiet",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  companyrequestapi:
+    build:
+      context: .
+      dockerfile: CompanyRequestApi/Dockerfile
+    restart: on-failure
+    ports:
+      - "8080:80"
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres_db;Port=5432;Database=company_request_db;Username=user_company_request;Password=password_company_request"
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+  resaleapi:
+    build:
+      context: .
+      dockerfile: ResaleApi/Dockerfile
+    restart: on-failure
+    ports:
+      - "8082:80"
+    depends_on:
+      mongodb_db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__MongoDb: "mongodb://mongodb_db:27017/resale_db"
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+volumes:
+  postgres_data:
+  mongodb_data:

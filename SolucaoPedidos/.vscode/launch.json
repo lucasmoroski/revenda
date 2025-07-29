@@ -5,10 +5,10 @@
       "name": "Launch ResaleApi",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build-resaleapi", // Certifique-se que essa task existe em tasks.json
-      "program": "${workspaceFolder}/src/ResaleApi/bin/Debug/net8.0/ResaleApi.dll",
+      "preLaunchTask": "build-resaleapi",
+      "program": "${workspaceFolder}/ResaleApi/bin/Debug/net8.0/ResaleApi.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/src/ResaleApi",
+      "cwd": "${workspaceFolder}/ResaleApi",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openBrowser",
@@ -26,10 +26,10 @@
       "name": "Launch CompanyRequestApi",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build-companyrequestapi", // Certifique-se que essa task existe em tasks.json
-      "program": "${workspaceFolder}/src/CompanyRequestApi/bin/Debug/net8.0/CompanyRequestApi.dll",
+      "preLaunchTask": "build-companyrequestapi",
+      "program": "${workspaceFolder}/CompanyRequestApi/bin/Debug/net8.0/CompanyRequestApi.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/src/CompanyRequestApi",
+      "cwd": "${workspaceFolder}/CompanyRequestApi",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openBrowser",
@@ -43,17 +43,6 @@
         "/Views": "${workspaceFolder}/Views"
       }
     }
-    // Não se esqueça de adicionar a configuração para o frontend React aqui se quiser depurá-lo junto!
-    // Exemplo:
-    // {
-    //     "name": "Launch React (Chrome)",
-    //     "type": "chrome",
-    //     "request": "launch",
-    //     "url": "http://localhost:5173", // Ajuste para a porta do seu projeto React
-    //     "webRoot": "${workspaceFolder}/frontend/revenda-app/src",
-    //     "sourceMaps": true,
-    //     "preLaunchTask": "npm: dev" // Se você usa 'npm run dev'
-    // }
   ],
   "compounds": [
     {
@@ -62,10 +51,10 @@
         "Launch ResaleApi",
         "Launch CompanyRequestApi"
       ],
-      "stopAll": true // Se uma sessão parar, todas as outras param
+      "stopAll": true
     },
     {
-      "name": "Launch All (APIs + React)", // Opcional: para rodar frontend junto
+      "name": "Launch All (APIs + React)",
       "configurations": [
         "Launch ResaleApi",
         "Launch CompanyRequestApi",

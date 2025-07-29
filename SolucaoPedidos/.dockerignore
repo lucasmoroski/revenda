@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.vscode/
+.git/
+.gitignore
+*.sln.DotSettings
+*.suo
+*.user
+*.bak
+*.vs/
+docker-compose*.yml
+Tests/
